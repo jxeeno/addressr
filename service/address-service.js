@@ -759,6 +759,9 @@ export function mapAddressDetails (d, context, i, count) {
           })
         }
       }),
+      ...(d.LEGAL_PARCEL_ID !== '' && {
+        legalParcelId: d.LEGAL_PARCEL_ID
+      }),
       state: {
         name: context.stateName,
         abbreviation: context.state
