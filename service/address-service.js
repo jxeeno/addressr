@@ -30,7 +30,7 @@ const cache = new Keyv({
 
 const PAGE_SIZE = process.env.PAGE_SIZE || 8
 
-function getCoveredStates () {
+function getCoveredStates() {
   const covered = process.env.COVERED_STATES || ''
   if (covered == '') {
     return []
@@ -48,15 +48,15 @@ const THIRTY_DAYS_MS = ONE_DAY_MS * 30
 
 const ES_INDEX_NAME = process.env.ES_INDEX_NAME || 'addressr'
 
-export async function dropIndex () {
+export async function dropIndex() {
   await dropESIndex(global.esClient)
 }
 
-export async function clearAddresses () {
+export async function clearAddresses() {
   await initIndex(global.esClient, true)
 }
 
-export async function setAddresses (addr) {
+export async function setAddresses(addr) {
   await clearAddresses()
 
   const indexingBody = []
@@ -93,7 +93,7 @@ const GNAF_PACKAGE_URL =
   process.env.GNAF_PACKAGE_URL ||
   'https://data.gov.au/api/3/action/package_show?id=19432f89-dc3a-4ef3-b943-5326ef1dbecc'
 
-async function fetchPackageData () {
+async function fetchPackageData() {
   const packageUrl = GNAF_PACKAGE_URL
   // See if we have the value in cache
   const cachedResponse = await cache.get(packageUrl)
@@ -137,7 +137,7 @@ async function fetchPackageData () {
 
 const GNAF_DIR = process.env.GNAF_DIR || `target/gnaf`
 
-export async function fetchGnafFile () {
+export async function fetchGnafFile() {
   const response = await fetchPackageData()
   const pack = JSON.parse(response.body)
   // id as of 16/07 for zip is 4b084096-65e4-4c8e-abbe-5e54ff85f42f
@@ -195,7 +195,7 @@ export async function fetchGnafFile () {
   }
 }
 
-export async function unzipFile (file) {
+export async function unzipFile(file) {
   const extname = path.extname(file)
   const basenameWithoutExtention = path.basename(file, extname)
   const incomplete_path = `${GNAF_DIR}/incomplete/${basenameWithoutExtention}`
@@ -299,7 +299,7 @@ export async function unzipFile (file) {
 //   };
 // }
 
-function levelTypeCodeToName (code, context) {
+function levelTypeCodeToName(code, context) {
   const found = context['Authority_Code_LEVEL_TYPE_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -310,7 +310,7 @@ function levelTypeCodeToName (code, context) {
   return
 }
 
-function flatTypeCodeToName (code, context) {
+function flatTypeCodeToName(code, context) {
   const found = context['Authority_Code_FLAT_TYPE_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -321,7 +321,7 @@ function flatTypeCodeToName (code, context) {
   return
 }
 
-function streetTypeCodeToName (code, context) {
+function streetTypeCodeToName(code, context) {
   const found = context['Authority_Code_STREET_TYPE_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -332,7 +332,7 @@ function streetTypeCodeToName (code, context) {
   return
 }
 
-function streetClassCodeToName (code, context) {
+function streetClassCodeToName(code, context) {
   const found = context['Authority_Code_STREET_CLASS_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -343,7 +343,7 @@ function streetClassCodeToName (code, context) {
   return
 }
 
-function localityClassCodeToName (code, context) {
+function localityClassCodeToName(code, context) {
   const found = context['Authority_Code_LOCALITY_CLASS_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -354,7 +354,7 @@ function localityClassCodeToName (code, context) {
   return
 }
 
-function streetSuffixCodeToName (code, context) {
+function streetSuffixCodeToName(code, context) {
   const found = context['Authority_Code_STREET_SUFFIX_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -365,7 +365,7 @@ function streetSuffixCodeToName (code, context) {
   return
 }
 
-function geocodeReliabilityCodeToName (code, context) {
+function geocodeReliabilityCodeToName(code, context) {
   const found = context['Authority_Code_GEOCODE_RELIABILITY_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -376,7 +376,7 @@ function geocodeReliabilityCodeToName (code, context) {
   return
 }
 
-function geocodeTypeCodeToName (code, context) {
+function geocodeTypeCodeToName(code, context) {
   const found = context['Authority_Code_GEOCODE_TYPE_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -387,7 +387,7 @@ function geocodeTypeCodeToName (code, context) {
   return
 }
 
-function levelGeocodedCodeToName (code, context) {
+function levelGeocodedCodeToName(code, context) {
   const found = context['Authority_Code_GEOCODED_LEVEL_TYPE_AUT_psv'].find(
     entry => entry.CODE === code
   )
@@ -404,7 +404,7 @@ function levelGeocodedCodeToName (code, context) {
   return
 }
 
-function mapLocality (l, context) {
+function mapLocality(l, context) {
   return {
     ...(l.LOCALITY_NAME !== '' && {
       name: l.LOCALITY_NAME
@@ -418,7 +418,7 @@ function mapLocality (l, context) {
   }
 }
 
-function mapStreetLocality (l, context) {
+function mapStreetLocality(l, context) {
   return {
     ...(l.STREET_NAME !== '' && {
       name: l.STREET_NAME
@@ -444,7 +444,7 @@ function mapStreetLocality (l, context) {
   }
 }
 
-function mapGeo (geoSite, context, geoDefault) {
+function mapGeo(geoSite, context, geoDefault) {
   let foundDefault = false
   if (geoSite && geoDefault) {
     geoSite.forEach(geo => {
@@ -462,34 +462,57 @@ function mapGeo (geoSite, context, geoDefault) {
   }
   const sites = geoSite
     ? geoSite.map(geo => {
-        if (geo.BOUNDARY_EXTENT !== '') {
-          console.log('be', geo)
-          throw new Error('encounterd geo.BOUNDARY_EXTENT')
-        }
-        if (geo.PLANIMETRIC_ACCURACY !== '') {
-          console.log('pa', geo)
-          throw new Error('encounterd geo.PLANIMETRIC_ACCURACY')
-        }
-        if (geo.ELEVATION !== '') {
-          console.log('e', geo)
-          throw new Error('encounterd geo.ELEVATION')
-        }
-        if (geo.GEOCODE_SITE_NAME !== '') {
-          console.log('gsn', geo)
-          throw new Error('encounterd geo.GEOCODE_SITE_NAME')
-        }
+      if (geo.BOUNDARY_EXTENT !== '') {
+        console.log('be', geo)
+        throw new Error('encounterd geo.BOUNDARY_EXTENT')
+      }
+      if (geo.PLANIMETRIC_ACCURACY !== '') {
+        console.log('pa', geo)
+        throw new Error('encounterd geo.PLANIMETRIC_ACCURACY')
+      }
+      if (geo.ELEVATION !== '') {
+        console.log('e', geo)
+        throw new Error('encounterd geo.ELEVATION')
+      }
+      if (geo.GEOCODE_SITE_NAME !== '') {
+        console.log('gsn', geo)
+        throw new Error('encounterd geo.GEOCODE_SITE_NAME')
+      }
+      return {
+        default: geo.default || false,
+        ...(geo.GEOCODE_TYPE_CODE !== '' && {
+          type: {
+            code: geo.GEOCODE_TYPE_CODE,
+            name: geocodeTypeCodeToName(geo.GEOCODE_TYPE_CODE, context)
+          }
+        }),
+        ...(geo.RELIABILITY_CODE !== '' && {
+          reliability: {
+            code: geo.RELIABILITY_CODE,
+            name: geocodeReliabilityCodeToName(geo.RELIABILITY_CODE, context)
+          }
+        }),
+        ...(geo.LATITUDE !== '' && {
+          latitude: Number.parseFloat(geo.LATITUDE)
+        }),
+        ...(geo.LONGITUDE !== '' && {
+          longitude: Number.parseFloat(geo.LONGITUDE)
+        }),
+        ...(geo.GEOCODE_SITE_DESCRIPTION !== '' && {
+          description: geo.GEOCODE_SITE_DESCRIPTION
+        })
+      }
+    })
+    : []
+  const def =
+    geoDefault && !foundDefault
+      ? geoDefault.map(geo => {
         return {
-          default: geo.default || false,
+          default: true,
           ...(geo.GEOCODE_TYPE_CODE !== '' && {
             type: {
               code: geo.GEOCODE_TYPE_CODE,
               name: geocodeTypeCodeToName(geo.GEOCODE_TYPE_CODE, context)
-            }
-          }),
-          ...(geo.RELIABILITY_CODE !== '' && {
-            reliability: {
-              code: geo.RELIABILITY_CODE,
-              name: geocodeReliabilityCodeToName(geo.RELIABILITY_CODE, context)
             }
           }),
           ...(geo.LATITUDE !== '' && {
@@ -497,47 +520,24 @@ function mapGeo (geoSite, context, geoDefault) {
           }),
           ...(geo.LONGITUDE !== '' && {
             longitude: Number.parseFloat(geo.LONGITUDE)
-          }),
-          ...(geo.GEOCODE_SITE_DESCRIPTION !== '' && {
-            description: geo.GEOCODE_SITE_DESCRIPTION
           })
         }
       })
-    : []
-  const def =
-    geoDefault && !foundDefault
-      ? geoDefault.map(geo => {
-          return {
-            default: true,
-            ...(geo.GEOCODE_TYPE_CODE !== '' && {
-              type: {
-                code: geo.GEOCODE_TYPE_CODE,
-                name: geocodeTypeCodeToName(geo.GEOCODE_TYPE_CODE, context)
-              }
-            }),
-            ...(geo.LATITUDE !== '' && {
-              latitude: Number.parseFloat(geo.LATITUDE)
-            }),
-            ...(geo.LONGITUDE !== '' && {
-              longitude: Number.parseFloat(geo.LONGITUDE)
-            })
-          }
-        })
       : []
   return sites.concat(def)
 }
 
-function mapToSla (fla) {
+function mapToSla(fla) {
   return fla.join(', ')
 }
 
 // eslint-disable-next-line complexity
-function mapToMla (s) {
+function mapToMla(s) {
   const fla = []
   if (s.level) {
     fla.push(
       `${s.level.type.name || ''} ${s.level.prefix || ''}${s.level.number ||
-        ''}${s.level.suffix || ''}`
+      ''}${s.level.suffix || ''}`
     )
   }
 
@@ -586,12 +586,12 @@ function mapToMla (s) {
 }
 
 // eslint-disable-next-line complexity
-function mapToShortMla (s) {
+function mapToShortMla(s) {
   const fla = []
   if (s.level) {
     fla.push(
       `${s.level.type.code || ''}${s.level.prefix || ''}${s.level.number ||
-        ''}${s.level.suffix || ''}`
+      ''}${s.level.suffix || ''}`
     )
   }
 
@@ -628,7 +628,7 @@ function mapToShortMla (s) {
 }
 
 // eslint-disable-next-line complexity
-export function mapAddressDetails (d, context, i, count) {
+export function mapAddressDetails(d, context, i, count) {
   const streetLocality = context.streetLocalityIndexed[d.STREET_LOCALITY_PID]
   const locality = context.localityIndexed[d.LOCALITY_PID]
 
@@ -645,18 +645,18 @@ export function mapAddressDetails (d, context, i, count) {
   const rval = {
     ...(d.LEVEL_GEOCODED_CODE != '' &&
       hasGeo && {
-        geocoding: {
-          ...(d.LEVEL_GEOCODED_CODE !== '' && {
-            level: {
-              code: d.LEVEL_GEOCODED_CODE,
-              name: levelGeocodedCodeToName(d.LEVEL_GEOCODED_CODE, context)
-            }
-          }),
-          ...(hasGeo && {
-            geocodes: mapGeo(geoSite, context, geoDefault)
-          })
-        }
-      }),
+      geocoding: {
+        ...(d.LEVEL_GEOCODED_CODE !== '' && {
+          level: {
+            code: d.LEVEL_GEOCODED_CODE,
+            name: levelGeocodedCodeToName(d.LEVEL_GEOCODED_CODE, context)
+          }
+        }),
+        ...(hasGeo && {
+          geocodes: mapGeo(geoSite, context, geoDefault)
+        })
+      }
+    }),
     structured: {
       ...(d.BUILDING_NAME !== '' && {
         buildingName: d.BUILDING_NAME
@@ -759,9 +759,6 @@ export function mapAddressDetails (d, context, i, count) {
           })
         }
       }),
-      ...(d.LEGAL_PARCEL_ID !== '' && {
-        legalParcelId: d.LEGAL_PARCEL_ID
-      }),
       state: {
         name: context.stateName,
         abbreviation: context.state
@@ -770,7 +767,10 @@ export function mapAddressDetails (d, context, i, count) {
     ...(d.PRIMARY_SECONDARY !== '' && {
       precedence: d.PRIMARY_SECONDARY === 'P' ? 'primary' : 'secondary'
     }),
-    pid: d.ADDRESS_DETAIL_PID
+    pid: d.ADDRESS_DETAIL_PID,
+    ...(d.LEGAL_PARCEL_ID !== '' && {
+      legalParcelId: d.LEGAL_PARCEL_ID
+    }),
   }
   rval.mla = mapToMla(rval.structured)
   rval.sla = mapToSla(rval.mla)
@@ -793,7 +793,7 @@ export function mapAddressDetails (d, context, i, count) {
   return rval
 }
 
-async function loadAddressDetails (
+async function loadAddressDetails(
   file,
   expectedCount,
   context,
@@ -934,7 +934,7 @@ async function loadAddressDetails (
   //await searchForAddress('657 The Entrance Road'); //'2/25 TOTTERDE'; // 'UNT 2, BELCONNEN';);
 }
 
-export async function searchForAddress (searchString, p, pageSize = PAGE_SIZE) {
+export async function searchForAddress(searchString, p, pageSize = PAGE_SIZE) {
   //  const searchString = '657 The Entrance Road'; //'2/25 TOTTERDE'; // 'UNT 2, BELCONNEN';
   const searchResp = await global.esClient.search({
     index: ES_INDEX_NAME,
@@ -989,7 +989,7 @@ export async function searchForAddress (searchString, p, pageSize = PAGE_SIZE) {
   return searchResp
 }
 
-async function sendIndexRequest (
+async function sendIndexRequest(
   indexingBody,
   initialBackoff = Number.parseInt(
     process.env.ADDRESSR_INDEX_BACKOFF || '30000'
@@ -1051,7 +1051,7 @@ async function sendIndexRequest (
   }
 }
 
-async function getStateName (abbr, file) {
+async function getStateName(abbr, file) {
   return await new Promise((resolve, reject) => {
     Papa.parse(fs.createReadStream(file), {
       header: true,
@@ -1067,7 +1067,7 @@ async function getStateName (abbr, file) {
   })
 }
 
-function mapAuthCodeTableToSynonymList (table) {
+function mapAuthCodeTableToSynonymList(table) {
   return table
     .filter(type => {
       return type.CODE !== type.NAME
@@ -1077,7 +1077,7 @@ function mapAuthCodeTableToSynonymList (table) {
     })
 }
 
-function buildSynonyms (context) {
+function buildSynonyms(context) {
   //example synonym format [
   //       'SUPER, super, superannuation',
   //       'SMSF, smsf, self-managed superannuation funds, self managed superannuation funds'
@@ -1105,7 +1105,7 @@ function buildSynonyms (context) {
 
 const { readdir } = require('fs').promises
 
-async function getFiles (currentDir, baseDir) {
+async function getFiles(currentDir, baseDir) {
   const dir = path.resolve(baseDir, currentDir)
   logger(`reading ${dir} (${currentDir} in ${baseDir})`)
   const dirents = await readdir(dir, { withFileTypes: true })
@@ -1118,7 +1118,7 @@ async function getFiles (currentDir, baseDir) {
   return Array.prototype.concat(...files)
 }
 
-function countFileLines (filePath) {
+function countFileLines(filePath) {
   return new Promise((resolve, reject) => {
     let lineCount = 0
     fs.createReadStream(filePath)
@@ -1137,7 +1137,7 @@ function countFileLines (filePath) {
   })
 }
 
-async function loadGnafData (directory, { refresh = false } = {}) {
+async function loadGnafData(directory, { refresh = false } = {}) {
   const countsFile = `${directory}/Counts.csv`
   let countsFileExists = await fileExists(countsFile)
 
@@ -1231,7 +1231,7 @@ async function loadGnafData (directory, { refresh = false } = {}) {
   }
 }
 
-async function fileExists (countsFile) {
+async function fileExists(countsFile) {
   try {
     await fsp.access(countsFile, fs.constants.F_OK)
     return true
@@ -1241,7 +1241,7 @@ async function fileExists (countsFile) {
   }
 }
 
-async function loadFileCounts (countsFile) {
+async function loadFileCounts(countsFile) {
   const filesCounts = {}
   await new Promise((resolve, reject) => {
     Papa.parse(fs.createReadStream(countsFile), {
@@ -1272,7 +1272,7 @@ async function loadFileCounts (countsFile) {
   return filesCounts
 }
 
-async function loadFileContents (contentsFile) {
+async function loadFileContents(contentsFile) {
   const contents = await fsp.readFile(contentsFile)
   return contents
     .toString()
@@ -1280,7 +1280,7 @@ async function loadFileContents (contentsFile) {
     .map(line => line.trim())
 }
 
-async function loadState (files, directory, state) {
+async function loadState(files, directory, state) {
   const stateFile = files.find(f => f.match(new RegExp(`${state}_STATE_psv`)))
   if (stateFile === undefined) {
     error(`Could not find state file '${state}_STATE_psv.psv'`)
@@ -1291,7 +1291,7 @@ async function loadState (files, directory, state) {
   }
 }
 
-async function loadStreetLocality (files, directory, state) {
+async function loadStreetLocality(files, directory, state) {
   const localityFile = files.find(f =>
     f.match(new RegExp(`${state}_STREET_LOCALITY_psv`))
   )
@@ -1317,7 +1317,7 @@ async function loadStreetLocality (files, directory, state) {
   }
 }
 
-async function loadLocality (files, directory, state) {
+async function loadLocality(files, directory, state) {
   const localityFile = files.find(f =>
     f.match(new RegExp(`${state}_LOCALITY_psv`))
   )
@@ -1341,7 +1341,7 @@ async function loadLocality (files, directory, state) {
   }
 }
 
-async function loadSiteGeo (files, directory, state, loadContext, filesCounts) {
+async function loadSiteGeo(files, directory, state, loadContext, filesCounts) {
   logger('Loading site geos')
 
   const geoFile = files.find(f =>
@@ -1398,7 +1398,7 @@ async function loadSiteGeo (files, directory, state, loadContext, filesCounts) {
   }
 }
 
-async function loadDefaultGeo (
+async function loadDefaultGeo(
   files,
   directory,
   state,
@@ -1464,7 +1464,7 @@ async function loadDefaultGeo (
   }
 }
 
-async function loadAuthFiles (files, directory, loadContext, filesCounts) {
+async function loadAuthFiles(files, directory, loadContext, filesCounts) {
   const authCodeFiles = files.filter(f => f.match(/Authority Code/))
   logger('authCodeFiles', authCodeFiles)
   for (const authFile of authCodeFiles) {
@@ -1501,7 +1501,7 @@ async function loadAuthFiles (files, directory, loadContext, filesCounts) {
   logger('AUTH', loadContext)
 }
 
-export async function loadGnaf ({ refresh = false } = {}) {
+export async function loadGnaf({ refresh = false } = {}) {
   const file = await fetchGnafFile()
   const unzipped = await unzipFile(file)
 
@@ -1528,7 +1528,7 @@ export async function loadGnaf ({ refresh = false } = {}) {
  * addressId String ID of the address.
  * returns Address
  **/
-export async function getAddress (addressId) {
+export async function getAddress(addressId) {
   try {
     const jsonX = await global.esClient.get({
       index: ES_INDEX_NAME,
@@ -1573,7 +1573,7 @@ export async function getAddress (addressId) {
  * p Integer page number (optional)
  * returns List
  **/
-export async function getAddresses (url, swagger, q, p = 1) {
+export async function getAddresses(url, swagger, q, p = 1) {
   try {
     const foundAddresses = await searchForAddress(q, p)
     logger('foundAddresses', foundAddresses)
@@ -1604,12 +1604,11 @@ export async function getAddresses (url, swagger, q, p = 1) {
     if (p > 1) {
       link.set({
         rel: 'prev',
-        uri: `${url}${
-          q === undefined && p == 2 ? '' : '?'
-        }${new URLSearchParams({
-          ...(q !== undefined && { q }),
-          ...(p > 2 && { p: p - 1 })
-        }).toString()}`
+        uri: `${url}${q === undefined && p == 2 ? '' : '?'
+          }${new URLSearchParams({
+            ...(q !== undefined && { q }),
+            ...(p > 2 && { p: p - 1 })
+          }).toString()}`
       })
     }
     logger('TOTAL', foundAddresses.body.hits.total.value)
@@ -1649,7 +1648,7 @@ export async function getAddresses (url, swagger, q, p = 1) {
   }
 }
 
-function mapToSearchAddressResponse (foundAddresses) {
+function mapToSearchAddressResponse(foundAddresses) {
   return foundAddresses.body.hits.hits.map(h => {
     return {
       sla: h._source.sla,
