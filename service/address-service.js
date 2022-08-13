@@ -1451,10 +1451,10 @@ async function loadSiteGeo(files, directory, state, loadContext, filesCounts) {
                 GEOCODE_SITE_DESCRIPTION: row.GEOCODE_SITE_DESCRIPTION
               }
 
-              if (loadContext.geoIndexed[row..ADDRESS_SITE_PID] === undefined) {
-                loadContext.geoIndexed[row..ADDRESS_SITE_PID] = [g]
+              if (loadContext.geoIndexed[row.ADDRESS_SITE_PID] === undefined) {
+                loadContext.geoIndexed[row.ADDRESS_SITE_PID] = [g]
               } else {
-                loadContext.geoIndexed[row..ADDRESS_SITE_PID].push(g)
+                loadContext.geoIndexed[row.ADDRESS_SITE_PID].push(g)
               }
               count += 1
             })
