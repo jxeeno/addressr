@@ -543,22 +543,22 @@ function mapGeo(geoSite, context, geoDefault) {
   }
   const sites = geoSite
     ? geoSite.map(geo => {
-      if (geo.BOUNDARY_EXTENT !== '') {
-        console.log('be', geo)
-        throw new Error('encounterd geo.BOUNDARY_EXTENT')
-      }
-      if (geo.PLANIMETRIC_ACCURACY !== '') {
-        console.log('pa', geo)
-        throw new Error('encounterd geo.PLANIMETRIC_ACCURACY')
-      }
-      if (geo.ELEVATION !== '') {
-        console.log('e', geo)
-        throw new Error('encounterd geo.ELEVATION')
-      }
-      if (geo.GEOCODE_SITE_NAME !== '') {
-        console.log('gsn', geo)
-        throw new Error('encounterd geo.GEOCODE_SITE_NAME')
-      }
+      // if (geo.BOUNDARY_EXTENT !== '') {
+      //   console.log('be', geo)
+      //   throw new Error('encounterd geo.BOUNDARY_EXTENT')
+      // }
+      // if (geo.PLANIMETRIC_ACCURACY !== '') {
+      //   console.log('pa', geo)
+      //   throw new Error('encounterd geo.PLANIMETRIC_ACCURACY')
+      // }
+      // if (geo.ELEVATION !== '') {
+      //   console.log('e', geo)
+      //   throw new Error('encounterd geo.ELEVATION')
+      // }
+      // if (geo.GEOCODE_SITE_NAME !== '') {
+      //   console.log('gsn', geo)
+      //   throw new Error('encounterd geo.GEOCODE_SITE_NAME')
+      // }
       return {
         default: geo.default || false,
         ...(geo.GEOCODE_TYPE_CODE !== '' && {
@@ -1406,6 +1406,7 @@ async function loadLocality(files, directory, state) {
 
 async function loadSiteGeo(files, directory, state, loadContext, filesCounts) {
   logger('Loading site geos')
+  // site - ADDRESS_SITE_GEOCODE_PID|DATE_CREATED|DATE_RETIRED|ADDRESS_SITE_PID|GEOCODE_SITE_NAME|GEOCODE_SITE_DESCRIPTION|GEOCODE_TYPE_CODE|RELIABILITY_CODE|BOUNDARY_EXTENT|PLANIMETRIC_ACCURACY|ELEVATION|LONGITUDE|LATITUDE
 
   const geoFile = files.find(f =>
     f.match(new RegExp(`${state}_ADDRESS_SITE_GEOCODE_psv`))
@@ -1438,11 +1439,19 @@ async function loadSiteGeo(files, directory, state, loadContext, filesCounts) {
                   )
                 }
               }
-              const g = row
-              if (loadContext.geoIndexed[g.ADDRESS_SITE_PID] === undefined) {
-                loadContext.geoIndexed[g.ADDRESS_SITE_PID] = [g]
+
+              const g = {
+                GEOCODE_TYPE_CODE: row.GEOCODE_TYPE_CODE,
+                RELIABILITY_CODE: row.RELIABILITY_CODE,
+                LONGITUDE: row.LONGITUDE,
+                LATITUDE: row.LATITUDE,
+                GEOCODE_SITE_DESCRIPTION: row.GEOCODE_SITE_DESCRIPTION
+              }
+
+              if (loadContext.geoIndexed[row..ADDRESS_SITE_PID] === undefined) {
+                loadContext.geoIndexed[row..ADDRESS_SITE_PID] = [g]
               } else {
-                loadContext.geoIndexed[g.ADDRESS_SITE_PID].push(g)
+                loadContext.geoIndexed[row..ADDRESS_SITE_PID].push(g)
               }
               count += 1
             })
@@ -1469,6 +1478,8 @@ async function loadDefaultGeo(
   filesCounts
 ) {
   logger('Loading default geos')
+  // default - ADDRESS_DEFAULT_GEOCODE_PID|DATE_CREATED|DATE_RETIRED|ADDRESS_DETAIL_PID|GEOCODE_TYPE_CODE|LONGITUDE|LATITUDE
+
   const geoFile = files.find(f =>
     f.match(new RegExp(`${state}_ADDRESS_DEFAULT_GEOCODE_psv`))
   )
@@ -1500,14 +1511,19 @@ async function loadDefaultGeo(
                   )
                 }
               }
-              const g = row
+              const g = {
+                GEOCODE_TYPE_CODE: row.GEOCODE_TYPE_CODE,
+                RELIABILITY_CODE: row.RELIABILITY_CODE,
+                LONGITUDE: row.LONGITUDE,
+                LATITUDE: row.LATITUDE,
+              }
               if (
-                loadContext.geoDefaultIndexed[g.ADDRESS_DETAIL_PID] ===
+                loadContext.geoDefaultIndexed[row.ADDRESS_DETAIL_PID] ===
                 undefined
               ) {
-                loadContext.geoDefaultIndexed[g.ADDRESS_DETAIL_PID] = [g]
+                loadContext.geoDefaultIndexed[row.ADDRESS_DETAIL_PID] = [g]
               } else {
-                loadContext.geoDefaultIndexed[g.ADDRESS_DETAIL_PID].push(g)
+                loadContext.geoDefaultIndexed[row.ADDRESS_DETAIL_PID].push(g)
               }
               count += 1
             })
