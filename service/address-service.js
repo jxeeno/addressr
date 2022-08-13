@@ -299,109 +299,202 @@ export async function unzipFile(file) {
 //   };
 // }
 
-function levelTypeCodeToName(code, context) {
-  const found = context['Authority_Code_LEVEL_TYPE_AUT_psv'].find(
-    entry => entry.CODE === code
-  )
-  if (found) {
-    return found.NAME
+const prepareMapping = (context, psvKey, mappingKey) => {
+  if (!context[mappingKey]) {
+    context[mappingKey] = {};
+    context[psvKey].forEach(
+      entry => {
+        context[mappingKey][entry.CODE] = {
+          code: entry.CODE,
+          name: entry.NAME
+        }
+      }
+    )
   }
-  error(`Unknown Level Type Code: '${code}'`)
-  return
+
+  return context[mappingKey];
 }
 
-function flatTypeCodeToName(code, context) {
-  const found = context['Authority_Code_FLAT_TYPE_AUT_psv'].find(
-    entry => entry.CODE === code
+function levelTypeCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_LEVEL_TYPE_AUT_psv',
+    'Authority_Code_LEVEL_TYPE_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(`Unknown Flat Type Code: '${code}'`)
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_LEVEL_TYPE_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Level Type Code: '${code}'`)
+  // return
 }
 
-function streetTypeCodeToName(code, context) {
-  const found = context['Authority_Code_STREET_TYPE_AUT_psv'].find(
-    entry => entry.CODE === code
+function flatTypeCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_FLAT_TYPE_AUT_psv',
+    'Authority_Code_FLAT_TYPE_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(`Unknown Street Type Code: '${code}'`)
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_FLAT_TYPE_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Flat Type Code: '${code}'`)
+  // return
 }
 
-function streetClassCodeToName(code, context) {
-  const found = context['Authority_Code_STREET_CLASS_AUT_psv'].find(
-    entry => entry.CODE === code
+function streetTypeCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_STREET_TYPE_AUT_psv',
+    'Authority_Code_STREET_TYPE_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(`Unknown Street Class Code: '${code}'`)
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_STREET_TYPE_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Street Type Code: '${code}'`)
+  // return
 }
 
-function localityClassCodeToName(code, context) {
-  const found = context['Authority_Code_LOCALITY_CLASS_AUT_psv'].find(
-    entry => entry.CODE === code
+function streetClassCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_STREET_CLASS_AUT_psv',
+    'Authority_Code_STREET_CLASS_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(`Unknown Locality Class Code: '${code}'`)
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_STREET_CLASS_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Street Class Code: '${code}'`)
+  // return
 }
 
-function streetSuffixCodeToName(code, context) {
-  const found = context['Authority_Code_STREET_SUFFIX_AUT_psv'].find(
-    entry => entry.CODE === code
+function localityClassCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_LOCALITY_CLASS_AUT_psv',
+    'Authority_Code_LOCALITY_CLASS_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(`Unknown Street Suffix Code: '${code}'`)
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_LOCALITY_CLASS_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Locality Class Code: '${code}'`)
+  // return
 }
 
-function geocodeReliabilityCodeToName(code, context) {
-  const found = context['Authority_Code_GEOCODE_RELIABILITY_AUT_psv'].find(
-    entry => entry.CODE === code
+function streetSuffixCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_STREET_SUFFIX_AUT_psv',
+    'Authority_Code_STREET_SUFFIX_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(`Unknown Geocode Reliability Code: '${code}'`)
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_STREET_SUFFIX_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Street Suffix Code: '${code}'`)
+  // return
 }
 
-function geocodeTypeCodeToName(code, context) {
-  const found = context['Authority_Code_GEOCODE_TYPE_AUT_psv'].find(
-    entry => entry.CODE === code
-  )
-  if (found) {
-    return found.NAME
+function geocodeReliabilityCodeToObject(code, context) {
+  if (!context['Authority_Code_GEOCODE_RELIABILITY_AUT_mapping']) {
+    context['Authority_Code_GEOCODE_RELIABILITY_AUT_mapping'] = {};
+    context['Authority_Code_GEOCODE_RELIABILITY_AUT_psv'].forEach(
+      entry => {
+        context['Authority_Code_GEOCODE_RELIABILITY_AUT_mapping'][entry.CODE] = {
+          code: entry.CODE,
+          name: entry.NAME
+        }
+      }
+    )
   }
-  error(`Unknown Geocode Type Code: '${code}'`)
-  return
+
+  return context['Authority_Code_GEOCODE_RELIABILITY_AUT_mapping'][code]
+  // const found = context['Authority_Code_GEOCODE_RELIABILITY_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Geocode Reliability Code: '${code}'`)
+  // return
 }
 
-function levelGeocodedCodeToName(code, context) {
-  const found = context['Authority_Code_GEOCODED_LEVEL_TYPE_AUT_psv'].find(
-    entry => entry.CODE === code
+function geocodeTypeCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_GEOCODE_TYPE_AUT_psv',
+    'Authority_Code_GEOCODE_TYPE_AUT_mapping'
   )
-  if (found) {
-    return found.NAME
-  }
-  error(
-    `Unknown Geocoded Level Type Code: '${code}' in:\n${JSON.stringify(
-      context['Authority_Code_GEOCODED_LEVEL_TYPE_AUT_psv'],
-      undefined,
-      2
-    )}`
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_GEOCODE_TYPE_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(`Unknown Geocode Type Code: '${code}'`)
+  // return
+}
+
+function levelGeocodedCodeToObject(code, context) {
+  const lookup = prepareMapping(
+    context,
+    'Authority_Code_GEOCODED_LEVEL_TYPE_AUT_psv',
+    'Authority_Code_GEOCODED_LEVEL_TYPE_AUT_mapping'
   )
-  return
+
+  return lookup[code];
+
+  // const found = context['Authority_Code_GEOCODED_LEVEL_TYPE_AUT_psv'].find(
+  //   entry => entry.CODE === code
+  // )
+  // if (found) {
+  //   return found.NAME
+  // }
+  // error(
+  //   `Unknown Geocoded Level Type Code: '${code}' in:\n${JSON.stringify(
+  //     context['Authority_Code_GEOCODED_LEVEL_TYPE_AUT_psv'],
+  //     undefined,
+  //     2
+  //   )}`
+  // )
+  // return
 }
 
 function mapLocality(l, context) {
@@ -410,10 +503,7 @@ function mapLocality(l, context) {
       name: l.LOCALITY_NAME
     }),
     ...(l.LOCALITY_CLASS_CODE !== '' && {
-      class: {
-        code: l.LOCALITY_CLASS_CODE,
-        name: localityClassCodeToName(l.LOCALITY_CLASS_CODE, context)
-      }
+      class: localityClassCodeToObject(l.LOCALITY_CLASS_CODE, context)
     })
   }
 }
@@ -424,22 +514,13 @@ function mapStreetLocality(l, context) {
       name: l.STREET_NAME
     }),
     ...(l.STREET_TYPE_CODE !== '' && {
-      type: {
-        code: l.STREET_TYPE_CODE,
-        name: streetTypeCodeToName(l.STREET_TYPE_CODE, context)
-      }
+      type: streetTypeCodeToObject(l.STREET_TYPE_CODE, context)
     }),
     ...(l.STREET_CLASS_CODE !== '' && {
-      class: {
-        code: l.STREET_CLASS_CODE,
-        name: streetClassCodeToName(l.STREET_CLASS_CODE, context)
-      }
+      class: streetClassCodeToObject(l.STREET_CLASS_CODE, context)
     }),
     ...(l.STREET_SUFFIX_CODE !== '' && {
-      suffix: {
-        code: l.STREET_SUFFIX_CODE,
-        name: streetSuffixCodeToName(l.STREET_SUFFIX_CODE, context)
-      }
+      suffix: streetSuffixCodeToObject(l.STREET_SUFFIX_CODE, context)
     })
   }
 }
@@ -481,16 +562,10 @@ function mapGeo(geoSite, context, geoDefault) {
       return {
         default: geo.default || false,
         ...(geo.GEOCODE_TYPE_CODE !== '' && {
-          type: {
-            code: geo.GEOCODE_TYPE_CODE,
-            name: geocodeTypeCodeToName(geo.GEOCODE_TYPE_CODE, context)
-          }
+          type: geocodeTypeCodeToObject(geo.GEOCODE_TYPE_CODE, context)
         }),
         ...(geo.RELIABILITY_CODE !== '' && {
-          reliability: {
-            code: geo.RELIABILITY_CODE,
-            name: geocodeReliabilityCodeToName(geo.RELIABILITY_CODE, context)
-          }
+          reliability: geocodeReliabilityCodeToObject(geo.RELIABILITY_CODE, context)
         }),
         ...(geo.LATITUDE !== '' && {
           latitude: Number.parseFloat(geo.LATITUDE)
@@ -510,10 +585,7 @@ function mapGeo(geoSite, context, geoDefault) {
         return {
           default: true,
           ...(geo.GEOCODE_TYPE_CODE !== '' && {
-            type: {
-              code: geo.GEOCODE_TYPE_CODE,
-              name: geocodeTypeCodeToName(geo.GEOCODE_TYPE_CODE, context)
-            }
+            type: geocodeTypeCodeToObject(geo.GEOCODE_TYPE_CODE, context)
           }),
           ...(geo.LATITUDE !== '' && {
             latitude: Number.parseFloat(geo.LATITUDE)
@@ -647,10 +719,7 @@ export function mapAddressDetails(d, context, i, count) {
       hasGeo && {
       geocoding: {
         ...(d.LEVEL_GEOCODED_CODE !== '' && {
-          level: {
-            code: d.LEVEL_GEOCODED_CODE,
-            name: levelGeocodedCodeToName(d.LEVEL_GEOCODED_CODE, context)
-          }
+          level: levelGeocodedCodeToObject(d.LEVEL_GEOCODED_CODE, context)
         }),
         ...(hasGeo && {
           geocodes: mapGeo(geoSite, context, geoDefault)
@@ -697,10 +766,7 @@ export function mapAddressDetails(d, context, i, count) {
         d.LEVEL_NUMBER_SUFFIX !== '') && {
         level: {
           ...(d.LEVEL_TYPE_CODE !== '' && {
-            type: {
-              code: d.LEVEL_TYPE_CODE,
-              name: levelTypeCodeToName(d.LEVEL_TYPE_CODE, context)
-            }
+            type: levelTypeCodeToObject(d.LEVEL_TYPE_CODE, context)
           }),
           ...(d.LEVEL_NUMBER_PREFIX !== '' && {
             prefix: d.LEVEL_NUMBER_PREFIX
@@ -719,10 +785,7 @@ export function mapAddressDetails(d, context, i, count) {
         d.FLAT_NUMBER_SUFFIX !== '') && {
         flat: {
           ...(d.FLAT_TYPE_CODE !== '' && {
-            type: {
-              code: d.FLAT_TYPE_CODE,
-              name: flatTypeCodeToName(d.FLAT_TYPE_CODE, context)
-            }
+            type: flatTypeCodeToObject(d.FLAT_TYPE_CODE, context)
           }),
           ...(d.FLAT_NUMBER_PREFIX !== '' && {
             prefix: d.FLAT_NUMBER_PREFIX
