@@ -874,7 +874,7 @@ async function loadAddressDetails(
         1024,
       chunk: function (chunk, parser) {
         parser.pause()
-        const items = []
+        // const items = []
         if (chunk.errors.length > 0) {
           error(`Errors reading '${file}': ${chunk.errors}`)
         } else {
@@ -886,7 +886,7 @@ async function loadAddressDetails(
               actualCount,
               expectedCount
             )
-            items.push(item)
+            // items.push(item)
             actualCount += 1
             indexingBody.push({
               index: {
