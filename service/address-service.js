@@ -29,6 +29,7 @@ const cache = new Keyv({
 })
 
 const PAGE_SIZE = process.env.PAGE_SIZE || 8
+const ENABLE_SITE_GEO = process.env.ENABLE_SITE_GEO && process.env.ENABLE_SITE_GEO === 'yes';
 
 function getCoveredStates() {
   const covered = process.env.COVERED_STATES || ''
@@ -1264,7 +1265,9 @@ async function loadGnafData(directory, { refresh = false } = {}) {
 
       if (process.env.ADDRESSR_ENABLE_GEO) {
         loadContext.geoIndexed = {}
-        await loadSiteGeo(files, directory, state, loadContext, filesCounts)
+        if (ENABLE_SITE_GEO) {
+          await loadSiteGeo(files, directory, state, loadContext, filesCounts)
+        }
         // logger('indexing site geos', state, geo.length);
         // for (let index = 0; index < geo.length; index++) {
         //   if (index % 10000 === 0) {
