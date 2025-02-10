@@ -5,10 +5,6 @@ RUN apk add --no-cache \
     dumb-init
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
-ARG USER=node
-ARG PACKAGE
-USER ${USER}
-
 ENV ELASTIC_PORT="9200"
 ENV ELASTIC_HOST="host.docker.internal"
 ENV ELASTIC_USERNAME=
