@@ -67,10 +67,11 @@ export async function setAddresses(addr) {
         _id: row.links.self.href
       }
     })
-    const { sla, ssla, ...structurted } = row
+    const { sla, ssla, lpid, ...structurted } = row
     indexingBody.push({
       sla,
       ssla,
+      lpid,
       structurted,
       confidence: structurted.structurted.confidence
     })
@@ -950,7 +951,7 @@ export async function searchForAddress(searchString, p, pageSize = PAGE_SIZE) {
             should: [
               {
                 multi_match: {
-                  fields: ['sla', 'ssla'],
+                  fields: ['sla', 'ssla', 'lpid'],
                   query: searchString,
                   fuzziness: 'AUTO',
                   type: 'bool_prefix',
@@ -961,7 +962,7 @@ export async function searchForAddress(searchString, p, pageSize = PAGE_SIZE) {
               },
               {
                 multi_match: {
-                  fields: ['sla', 'ssla'],
+                  fields: ['sla', 'ssla', 'lpid'],
                   query: searchString,
                   // fuzziness: 'AUTO',
                   type: 'phrase_prefix',
@@ -978,12 +979,14 @@ export async function searchForAddress(searchString, p, pageSize = PAGE_SIZE) {
         '_score',
         { confidence: { order: 'desc' } },
         { 'ssla.raw': { order: 'asc' } },
-        { 'sla.raw': { order: 'asc' } }
+        { 'sla.raw': { order: 'asc' } },
+        { 'lpid.raw': { order: 'asc' } }
       ],
       highlight: {
         fields: {
           sla: {},
-          ssla: {}
+          ssla: {},
+          lpid: {}
         }
       }
     }
