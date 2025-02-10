@@ -835,10 +835,11 @@ async function loadAddressDetails(
               _id: `/addresses/${item.pid}`
             }
           })
-          const { sla, ssla, ...structured } = item
+          const { sla, ssla, lpid, ...structured } = item
           indexingBody.push({
             sla,
             ssla,
+            lpid,
             structured,
             confidence: structured.structured.confidence
           })
