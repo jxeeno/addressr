@@ -24,4 +24,6 @@ WORKDIR "/home/${USER}"
 
 COPY . .
 
+RUN npm install
+
 CMD ["node", "bin/addressr-server-2.js"]
