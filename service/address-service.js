@@ -772,7 +772,7 @@ export function mapAddressDetails(d, context, i, count) {
     }),
     pid: d.ADDRESS_DETAIL_PID,
     ...(d.LEGAL_PARCEL_ID !== '' && {
-      lpid: d.LEGAL_PARCEL_ID === 'P' ? 'primary' : 'secondary'
+      lpid: d.LEGAL_PARCEL_ID
     })
   }
   rval.mla = mapToMla(rval.structured)
