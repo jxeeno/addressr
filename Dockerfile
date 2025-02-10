@@ -22,4 +22,6 @@ ENV ADDRESSR_INDEX_BACKOFF_MAX="10000"
 
 WORKDIR "/home/${USER}"
 
+COPY . .
+
 CMD ["node", "bin/addressr-server-2.js"]
