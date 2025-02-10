@@ -197,6 +197,8 @@ definitions:
         type: string
         description: The Persistent Identifier is unique to the real world feature this record represents.
         example: GANSW719386656
+      lpid:
+        type: string
       structured:
         $ref: '#/definitions/StructuredAddress'
       sla:
