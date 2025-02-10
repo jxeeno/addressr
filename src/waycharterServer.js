@@ -70,6 +70,7 @@ export function startRest2Server() {
           return {
             sla: h._source.sla,
             ...(h._source.ssla && { ssla: h._source.ssla }),
+            ...(h._source.lpid && { lpid: h._source.lpid }),
             highlight: {
               sla: h.highlight.sla[0],
               ...(h.highlight.ssla && { ssla: h.highlight.ssla[0] })

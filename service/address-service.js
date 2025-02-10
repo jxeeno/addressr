@@ -951,6 +951,11 @@ export async function searchForAddress(searchString, p, pageSize = PAGE_SIZE) {
           ...(searchString && {
             should: [
               {
+                term: {
+                  lpid: searchString
+                }
+              },
+              {
                 multi_match: {
                   fields: ['sla', 'ssla'],
                   query: searchString,
@@ -1549,7 +1554,8 @@ export async function getAddress(addressId) {
     logger('jsonX', jsonX)
     const json = {
       ...jsonX.body._source.structured,
-      sla: jsonX.body._source.sla
+      sla: jsonX.body._source.sla,
+      lpid: jsonX.body._source.lpid
     }
     logger('json', json)
     delete json._id
