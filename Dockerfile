@@ -24,7 +24,8 @@ WORKDIR "/home/${USER}"
 
 COPY . .
 
-RUN npm install
+RUN npm install --omit=dev
+RUN npm install genversion@^3.0.0
 RUN npm run build
 
 CMD ["node", "lib/bin/addressr-server-2.js"]
