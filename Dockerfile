@@ -20,7 +20,7 @@ WORKDIR "/home/${USER}"
 
 COPY . .
 
-RUN npm install --omit=dev
+RUN npm install
 RUN npm run build
 
 CMD ["node", "lib/bin/addressr-server-2.js"]
