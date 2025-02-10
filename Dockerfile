@@ -20,6 +20,7 @@ WORKDIR "/home/${USER}"
 
 COPY package.json package.json
 COPY package-lock.json package-lock.json
+COPY scripts/check-version.js scripts/check-version.js
 
 RUN npm install
 
