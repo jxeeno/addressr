@@ -102,6 +102,10 @@ export async function initIndex(esClient, clear, synonyms) {
             }
           }
         },
+        lpid: {
+          type: 'keyword',
+          index: true
+        },
         confidence: { type: 'integer' }
       }
     }
