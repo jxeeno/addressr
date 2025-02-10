@@ -769,7 +769,10 @@ export function mapAddressDetails(d, context, i, count) {
     ...(d.PRIMARY_SECONDARY !== '' && {
       precedence: d.PRIMARY_SECONDARY === 'P' ? 'primary' : 'secondary'
     }),
-    pid: d.ADDRESS_DETAIL_PID
+    pid: d.ADDRESS_DETAIL_PID,
+    ...(d.LEGAL_PARCEL_ID !== '' && {
+      lpid: d.LEGAL_PARCEL_ID === 'P' ? 'primary' : 'secondary'
+    })
   }
   rval.mla = mapToMla(rval.structured)
   rval.sla = mapToSla(rval.mla)
