@@ -18,9 +18,12 @@ ENV ADDRESSR_INDEX_BACKOFF_MAX="10000"
 
 WORKDIR "/home/${USER}"
 
-COPY . .
+COPY package.json package.json
+COPY package-lock.json package-lock.json
 
 RUN npm install
+
+COPY . .
 RUN npm run build
 
 CMD ["node", "lib/bin/addressr-server-2.js"]
